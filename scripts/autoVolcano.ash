@@ -58,7 +58,7 @@ void finishQuest(item it)
 		qty = 3;
 	if (it == $item[New Age healing crystal] || it == $item[gooey lava globs])
 		qty = 5;
-	if (it == $string[SMOOCH bracers])		// Special case
+	if (it == $item[SMOOCH bracers])		// Special case
 	{
 		qty = 15 - (item_amount(it) * 5);
 		it = $item[Superheated metal];
