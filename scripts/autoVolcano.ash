@@ -17,7 +17,7 @@ string first; string second; string third; // Order of quests at bunker
 location getLocation(string goal)
 {
 	if (goal == "Mr. Cheeng's 'stache" || goal == "Glass ceiling fragments" || goal == "Fused fuse")
-		return $location[LavaCo™ Lamp Factory];
+		return $location[LavaCo&trade; Lamp Factory];
 	if (goal == "Mr. Choch's bone" || goal == "Half-melted hula girl")
 		return $location[The Velvet / Gold Mine];
 	if (goal == "Pener's crisps" || goal == "Signed deuce" || goal == "The tongue of Smimmons" || goal == "Raul's guitar pick")
@@ -25,7 +25,7 @@ location getLocation(string goal)
 	if (goal == "Lavalos core" || goal == "The One Mood Ring")
 		return $location[The Bubblin' Caldera];
 	else
-		return $location[The Velvet / Gold Mine]
+		return $location[The Velvet / Gold Mine];
 }
 
 /*******************************************************
