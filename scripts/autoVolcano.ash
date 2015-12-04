@@ -50,7 +50,7 @@ int getChoice(string quest)
 		return 0;
 }
 
-void finishQuest(item it)
+void getItem(item it)
 {
 	// Figure out how many we need
 	int qty = 1;
@@ -69,9 +69,6 @@ void finishQuest(item it)
 		cli_execute("buy " + qty + " " + it);
 	if (it == $item[Superheated metal])
 		cli_execute("make " + qtyNeeded/5 + " SMOOCH bracers");
-	// Turn in
-	visit_url(bunker);
-	run_choice(getChoice(it.to_string()));
 }
 
 /*******************************************************
@@ -112,5 +109,10 @@ string pickQuest()
 
 void main()
 {
-	finishQuest(pickQuest().to_item());
+	string quest = pickQuest();
+	getItem(quest.to_item());
+	
+	// Turn in
+	//visit_url(bunker);
+	run_choice(getChoice(quest));
 }
