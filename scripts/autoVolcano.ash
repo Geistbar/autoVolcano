@@ -3,17 +3,26 @@ script "autoVolcano.ash"
 /*******************************************************
 *			USER DEFINED VARIABLES START
 /*******************************************************/
-boolean[string] adventureQuests = $strings[glass ceiling fragments, Mr. Cheeng's 'stache, Lavalos core, Saturday Night thermometer, Mr. Choch's bone, fused fuse, half-melted hula girl, Pener's crisps, signed deuce, the tongue of Smimmons, Raul's guitar pick, The One Mood Ring];
+location[string] adventureQuests = $strings[glass ceiling fragments, Mr. Cheeng's 'stache, Lavalos core, Mr. Choch's bone, fused fuse, half-melted hula girl, Pener's crisps, signed deuce, the tongue of Smimmons, Raul's guitar pick, The One Mood Ring, Saturday Night thermometer];
 int maxExpenditure = 15000; // The most amount of meat you want spent
 /*******************************************************
 *			USER DEFINED VARIABLES END
 *		PLEASE DO NOT MODIFY VARIABLES BELOW
 /*******************************************************/
-boolean[string] noAdventures = $strings[New Age healing crystal, superduperheated metal, gooey lava globs, SMOOCH bracers, SMOOCH bottlecap, smooth velvet bra]; // Order doesn't matter
+location[string] noAdventures = $strings[New Age healing crystal, superduperheated metal, gooey lava globs, SMOOCH bracers, SMOOCH bottlecap, smooth velvet bra]; // Order doesn't matter
 
 string bunker = "place.php?whichplace=airport_hot&action=airport4_questhub";
 string first; string second; string third; // Order of quests at bunker
 
+// Assign locations to quests
+foreach quest in $strings[Mr. Cheeng's 'stache, Glass ceiling fragments, Fused fuse]
+	adventureQuests[quest] = $location[LavaCo™ Lamp Factory];
+foreach quest in $strings[Mr. Choch's bone, Half-melted hula girl]
+	adventureQuests[quest] = $location[The Velvet / Gold Mine];
+foreach quest in $strings[Pener's crisps, Signed deuce, The tongue of Smimmons, Raul's guitar pick]
+	adventureQuests[quest] = $location[The SMOOCH Army HQ];
+foreach quest in $strings[Lavalos core, The One Mood Ring]
+	adventureQuests[quest] = $location[The Bubblin' Caldera];
 
 /*******************************************************
 *					cost()
@@ -111,8 +120,5 @@ void main()
 {
 	string quest = pickQuest();
 	getItem(quest.to_item());
-	
-	// Turn in
-	//visit_url(bunker);
 	run_choice(getChoice(quest));
 }
