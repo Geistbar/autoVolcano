@@ -48,7 +48,7 @@ int cost(string it)
 }
 
 /*******************************************************
-*					cost()
+*					getChoice()
 *	Returns the choice number of the specified quest.
 /*******************************************************/
 int getChoice(string quest)
@@ -78,10 +78,12 @@ void getItem(item it)
 	}
 	int qtyNeeded = qty - item_amount(it);
 	// Get item
-	if (noAdventures contains it.to_string() && qtyNeeded > 0 && cost(it) < maxExpenditure)
+	if (noAdventures contains it.to_string() && qtyNeeded > 0 && cost(it.to_string()) < maxExpenditure)
+	{
 		cli_execute("buy " + qty + " " + it);
-	if (it == $item[Superheated metal])
-		cli_execute("make " + qtyNeeded/5 + " SMOOCH bracers");
+		if (it == $item[Superheated metal])
+			cli_execute("make " + qtyNeeded/5 + " SMOOCH bracers");
+	}
 }
 
 /*******************************************************
@@ -124,5 +126,6 @@ void main()
 {
 	string quest = pickQuest();
 	getItem(quest.to_item());
+	visit_url(bunker);
 	run_choice(getChoice(quest));
 }
