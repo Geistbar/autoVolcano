@@ -107,7 +107,7 @@ void setNC(string quest)
 			cli_execute("set choiceAdventure1097 = 1");
 			break;
 		default:
-			print("Something might have gone wrong.")
+			print("Something might have gone wrong.");
 			break;
 	}
 }
