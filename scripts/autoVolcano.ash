@@ -119,7 +119,7 @@ void setNC(string quest)
 /*******************************************************/
 void getItem(item it)
 {
-	if (adventureQuests contains item.to_string())
+	if (adventureQuests contains it.to_string() && !useNoAdv)
 	{
 		while (item_amount(it) < 1)
 			adventure(1,getLocation(it.to_string());
