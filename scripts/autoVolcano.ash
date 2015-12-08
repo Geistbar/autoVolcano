@@ -73,40 +73,40 @@ void setNC(string quest)
 {
 	switch (quest)
 	{
-		case "fused fuse"
+		case "fused fuse":
 			cli_execute("set choiceAdventure1091 = 7");
 			break;
-		case "glass ceiling fragments"
+		case "glass ceiling fragments":
 			cli_execute("set choiceAdventure1096 = 2");
 			break;
-		case "Mr. Cheeng's 'stache"
+		case "Mr. Cheeng's 'stache":
 			cli_execute("set choiceAdventure1096 = 1");
 			break;
-		case "Lavalos core"
+		case "Lavalos core":
 			cli_execute("set choiceAdventure1097 = 2");
 			break;
-		case "Mr. Choch's bone"
+		case "Mr. Choch's bone":
 			cli_execute("set choiceAdventure1095 = 1");
 			break;
-		case "half-melted hula girl"
+		case "half-melted hula girl":
 			cli_execute("set choiceAdventure1095 = 2");
 			break;
-		case "Pener's crisps"
+		case "Pener's crisps":
 			cli_execute("set choiceAdventure1094 = 3");
 			break;
-		case "signed deuce"
+		case "signed deuce":
 			cli_execute("set choiceAdventure1094 = 4");
 			break;
-		case "the tongue of Smimmons"
+		case "the tongue of Smimmons":
 			cli_execute("set choiceAdventure1094 = 1");
 			break;
-		case "Raul's guitar pick"
+		case "Raul's guitar pick":
 			cli_execute("set choiceAdventure1094 = 2");
 			break;
-		case "The One Mood Ring"
+		case "The One Mood Ring":
 			cli_execute("set choiceAdventure1097 = 1");
 			break;
-		default
+		default:
 			print("Something might have gone wrong.")
 			break;
 	}
