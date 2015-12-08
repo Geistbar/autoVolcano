@@ -122,7 +122,7 @@ void getItem(item it)
 	if (adventureQuests contains it.to_string() && !useNoAdv)
 	{
 		while (item_amount(it) < 1)
-			adventure(1,getLocation(it.to_string());
+			adventure(1,getLocation(it.to_string()));
 	}
 	// Figure out how many we need
 	int qty = 1;
