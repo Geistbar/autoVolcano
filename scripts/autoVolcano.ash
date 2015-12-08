@@ -5,6 +5,7 @@ script "autoVolcano.ash"
 /*******************************************************/
 boolean[string] adventureQuests = $strings[glass ceiling fragments, Mr. Cheeng's 'stache, Lavalos core, Mr. Choch's bone, fused fuse, half-melted hula girl, Pener's crisps, signed deuce, the tongue of Smimmons, Raul's guitar pick, The One Mood Ring, Saturday Night thermometer];
 int maxExpenditure = 15000; // The most amount of meat you want spent
+boolean useNoAdv = TRUE; // Change this if you're silly
 /*******************************************************
 *			USER DEFINED VARIABLES END
 *		PLEASE DO NOT MODIFY VARIABLES BELOW
@@ -14,18 +15,23 @@ boolean[string] noAdventures = $strings[New Age healing crystal, superduperheate
 string bunker = "place.php?whichplace=airport_hot&action=airport4_questhub";
 string first; string second; string third; // Order of quests at bunker
 
+/*******************************************************
+*					getLocation()
+*	Returns the location needed to adventure in to 
+*	finish the Volcano quest.
+/*******************************************************/
 location getLocation(string goal)
 {
+	location loc;
 	if (goal == "Mr. Cheeng's 'stache" || goal == "Glass ceiling fragments" || goal == "Fused fuse")
-		return $location[LavaCo&trade; Lamp Factory];
+		loc = $location[LavaCo&trade; Lamp Factory];
 	if (goal == "Mr. Choch's bone" || goal == "Half-melted hula girl")
-		return $location[The Velvet / Gold Mine];
+		loc = $location[The Velvet / Gold Mine];
 	if (goal == "Pener's crisps" || goal == "Signed deuce" || goal == "The tongue of Smimmons" || goal == "Raul's guitar pick")
-		return $location[The SMOOCH Army HQ];
+		loc = $location[The SMOOCH Army HQ];
 	if (goal == "Lavalos core" || goal == "The One Mood Ring")
-		return $location[The Bubblin' Caldera];
-	else
-		return $location[The Velvet / Gold Mine];
+		loc = $location[The Bubblin' Caldera];
+	return loc;
 }
 
 /*******************************************************
@@ -63,8 +69,59 @@ int getChoice(string quest)
 		return 0;
 }
 
+void setNC(string quest)
+{
+	switch (quest)
+	case "fused fuse"
+		cli_execute("set choiceAdventure1091 = 7");
+		break;
+	case "glass ceiling fragments"
+		cli_execute("set choiceAdventure1096 = 2");
+		break;
+	case "Mr. Cheeng's 'stache"
+		cli_execute("set choiceAdventure1096 = 1");
+		break;
+	case "Lavalos core"
+		cli_execute("set choiceAdventure1097 = 2");
+		break;
+	case "Mr. Choch's bone"
+		cli_execute("set choiceAdventure1095 = 1");
+		break;
+	case "half-melted hula girl"
+		cli_execute("set choiceAdventure1095 = 2");
+		break;
+	case "Pener's crisps"
+		cli_execute("set choiceAdventure1094 = 3");
+		break;
+	case "signed deuce"
+		cli_execute("set choiceAdventure1094 = 4");
+		break;
+	case "the tongue of Smimmons"
+		cli_execute("set choiceAdventure1094 = 1");
+		break;
+	case "Raul's guitar pick"
+		cli_execute("set choiceAdventure1094 = 2");
+		break;
+	case "The One Mood Ring"
+		cli_execute("set choiceAdventure1097 = 1");
+		break;
+	default
+		print("Something might have gone wrong.")
+		break;
+}
+
+/*******************************************************
+*					getItem()
+*	Acquires the requisite quantity of an item needed
+*	for the Volcano quest.
+/*******************************************************/
 void getItem(item it)
 {
+	if (adventureQuests contains item.to_string())
+	{
+		while (item_amount(it) < 1)
+			adventure(1,getLocation(it.to_string());
+	}
 	// Figure out how many we need
 	int qty = 1;
 	if (it == $item[smooth velvet bra])
@@ -125,6 +182,16 @@ string pickQuest()
 void main()
 {
 	string quest = pickQuest();
+	if (adventureQuests contains quest && useNoAdv)
+	{
+		print("No zero-adventure quests available today.");
+		exit;
+	}
+	else if (cost(quest) > maxExpenditure)
+	{
+		print("The cost of today's quest exceeds your max expenditure setting.");
+		exit;
+	}
 	getItem(quest.to_item());
 	visit_url(bunker);
 	run_choice(getChoice(quest));
