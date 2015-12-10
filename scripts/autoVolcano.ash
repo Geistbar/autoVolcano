@@ -1,11 +1,65 @@
 script "autoVolcano.ash"
 
+location[string] outfits;		// Leave this alone
+location[string] fam;			// Leave this alone
+location[string] autoattack;	// Leave this alone
+location[string] mood;		// Leave this alone
 /*******************************************************
 *			USER DEFINED VARIABLES START
 /*******************************************************/
-boolean[string] adventureQuests = $strings[glass ceiling fragments, Mr. Cheeng's 'stache, Lavalos core, Mr. Choch's bone, fused fuse, half-melted hula girl, Pener's crisps, signed deuce, the tongue of Smimmons, Raul's guitar pick, The One Mood Ring, Saturday Night thermometer];
+// Quest priority order. Rearrange to your preference
+boolean[string] adventureQuests = $strings[fused fuse, glass ceiling fragments, Mr. Cheeng's 'stache, Lavalos core, Mr. Choch's bone, half-melted hula girl, Pener's crisps, signed deuce, the tongue of Smimmons, Raul's guitar pick, The One Mood Ring, Saturday Night thermometer];
+/*******************************************************
+*		Toggle Variables
+*
+*	- maxExpenditure: The script will avoid spending 
+*	meat above this level or turning in items worth
+*	above this level.
+*
+*	useZeroAdv: When set to TRUE, the script will not
+*	adventure in order to acquire items if no mall-able
+*	quests are available. Change to FALSE to allow the 
+*	script to adventure.
+/*******************************************************/
 int maxExpenditure = 15000; // The most amount of meat you want spent
-boolean useNoAdv = TRUE; // Change this if you're silly
+boolean useZeroAdv = TRUE; // Change this if you're silly
+/*******************************************************
+*			Outfit, familiar, and autoattacks
+*	Enter the names of your outfits auto attacks,
+*	and familiars.
+*
+*	- Outfit: the name of the outfit to use for that quest.
+*	If left blank, only necessary equipment will be equipped.
+*	
+*	- AutoAttack: for user created combat macros. 
+*	If left blank, it will default to mafia's standard behavior.
+*
+*	- Familiar: the proper/official name of the familiar to use.
+*	If left blank, your familiar will not be changed.
+*
+*	- Mood: the name of the mood you want to use.
+*	If left blank, your mood will not be changed.
+/*******************************************************/
+outfits[$location[LavaCo&trade; Lamp Factory]]		= "";
+outfits[$location[The Velvet / Gold Mine]]			= "";
+outfits[$location[The SMOOCH Army HQ]]				= "";
+outfits[$location[The Bubblin' Caldera]]			= "";
+
+fam[$location[LavaCo&trade; Lamp Factory]]			= "";
+fam[$location[The Velvet / Gold Mine]]				= "";
+fam[$location[The SMOOCH Army HQ]]					= "";
+fam[$location[The Bubblin' Caldera]]				= "";
+
+autoattack[$location[LavaCo&trade; Lamp Factory]]	= "";
+autoattack[$location[The Velvet / Gold Mine]]		= "";
+autoattack[$location[The SMOOCH Army HQ]]			= "";
+autoattack[$location[The Bubblin' Caldera]]			= "";
+
+mood[$location[LavaCo&trade; Lamp Factory]]			= "";
+mood[$location[The Velvet / Gold Mine]]				= "";
+mood[$location[The SMOOCH Army HQ]]					= "";
+mood[$location[The Bubblin' Caldera]]				= "";
+
 /*******************************************************
 *			USER DEFINED VARIABLES END
 *		PLEASE DO NOT MODIFY VARIABLES BELOW
@@ -16,6 +70,23 @@ string bunker = "place.php?whichplace=airport_hot&action=airport4_questhub";
 string first; string second; string third; // Order of quests at bunker
 
 /*******************************************************
+*					changeSetup()
+*	Changes familiar, outfit, mood and autoattack for
+*	quest, based on user defined variables.
+/*******************************************************/
+void changeSetup(location loc)
+{
+	if (outfits[loc] != "")
+		cli_execute("outfit " + outfits[loc]);
+	if (fam[loc] != "")
+		cli_execute("familiar " + fam[loc]);
+	if (autoattack[loc] != "")
+		cli_execute("autoattack " + autoattack[loc]);
+	if (mood[loc] != "")
+		cli_execute("mood " + mood[loc]);
+}
+
+/*******************************************************
 *					getLocation()
 *	Returns the location needed to adventure in to 
 *	finish the Volcano quest.
@@ -23,11 +94,11 @@ string first; string second; string third; // Order of quests at bunker
 location getLocation(string goal)
 {
 	location loc;
-	if (goal == "Mr. Cheeng's 'stache" || goal == "Glass ceiling fragments" || goal == "Fused fuse")
+	if (goal == "Mr. Cheeng's 'stache" || goal == "glass ceiling fragments" || goal == "fused fuse")
 		loc = $location[LavaCo&trade; Lamp Factory];
-	if (goal == "Mr. Choch's bone" || goal == "Half-melted hula girl")
+	if (goal == "Mr. Choch's bone" || goal == "half-melted hula girl")
 		loc = $location[The Velvet / Gold Mine];
-	if (goal == "Pener's crisps" || goal == "Signed deuce" || goal == "The tongue of Smimmons" || goal == "Raul's guitar pick")
+	if (goal == "Pener's crisps" || goal == "signed deuce" || goal == "the tongue of Smimmons" || goal == "Raul's guitar pick")
 		loc = $location[The SMOOCH Army HQ];
 	if (goal == "Lavalos core" || goal == "The One Mood Ring")
 		loc = $location[The Bubblin' Caldera];
@@ -69,41 +140,46 @@ int getChoice(string quest)
 		return 0;
 }
 
-void setNC(string quest)
+/*******************************************************
+*					setNC()
+*	Changes Mafia's Non-Combat choice for the correct
+*	quest so as to ensure successful operation.
+/*******************************************************/
+void setNC(item quest)
 {
 	switch (quest)
 	{
-		case "fused fuse":
+		case $item[fused fuse]:
 			cli_execute("set choiceAdventure1091 = 7");
 			break;
-		case "glass ceiling fragments":
+		case $item[glass ceiling fragments]:
 			cli_execute("set choiceAdventure1096 = 2");
 			break;
-		case "Mr. Cheeng's 'stache":
+		case $item[Mr. Cheeng's 'stache]:
 			cli_execute("set choiceAdventure1096 = 1");
 			break;
-		case "Lavalos core":
+		case $item[Lavalos core]:
 			cli_execute("set choiceAdventure1097 = 2");
 			break;
-		case "Mr. Choch's bone":
+		case $item[Mr. Choch's bone]:
 			cli_execute("set choiceAdventure1095 = 1");
 			break;
-		case "half-melted hula girl":
+		case $item[half-melted hula girl]:
 			cli_execute("set choiceAdventure1095 = 2");
 			break;
-		case "Pener's crisps":
+		case $item[Pener's crisps]:
 			cli_execute("set choiceAdventure1094 = 3");
 			break;
-		case "signed deuce":
+		case $item[signed deuce]:
 			cli_execute("set choiceAdventure1094 = 4");
 			break;
-		case "the tongue of Smimmons":
+		case $item[the tongue of Smimmons]:
 			cli_execute("set choiceAdventure1094 = 1");
 			break;
-		case "Raul's guitar pick":
+		case $item[Raul's guitar pick]:
 			cli_execute("set choiceAdventure1094 = 2");
 			break;
-		case "The One Mood Ring":
+		case $item[The One Mood Ring]:
 			cli_execute("set choiceAdventure1097 = 1");
 			break;
 		default:
@@ -119,8 +195,10 @@ void setNC(string quest)
 /*******************************************************/
 void getItem(item it)
 {
-	if (adventureQuests contains it.to_string() && !useNoAdv)
+	if (adventureQuests contains it.to_string() && !useZeroAdv)
 	{
+		setNC(it);
+		changeSetup(getLocation(it.to_string()));
 		while (item_amount(it) < 1)
 			adventure(1,getLocation(it.to_string()));
 	}
@@ -184,7 +262,7 @@ string pickQuest()
 void main()
 {
 	string quest = pickQuest();
-	if (adventureQuests contains quest && useNoAdv)
+	if (adventureQuests contains quest && useZeroAdv)
 	{
 		print("No zero-adventure quests available today.");
 		exit;
