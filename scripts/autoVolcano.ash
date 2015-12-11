@@ -158,8 +158,6 @@ void setNC(item quest)
 			break;
 		case $item[Mr. Cheeng's 'stache]:
 			cli_execute("set choiceAdventure1096 = 1");
-			if (get_property("choiceAdventure1091") == "0")	// Safety check
-				cli_execute("set choiceAdventure1091 = 7");
 			break;
 		case $item[Lavalos core]:
 			cli_execute("set choiceAdventure1097 = 2");
@@ -188,41 +186,6 @@ void setNC(item quest)
 		default:
 			print("Something might have gone wrong.");
 			break;
-	}
-}
-
-/*******************************************************
-*					getItem()
-*	Acquires the requisite quantity of an item needed
-*	for the Volcano quest.
-/*******************************************************/
-void getItem(item it)
-{
-	if (adventureQuests contains it.to_string() && !dontAdventure)
-	{
-		setNC(it);
-		changeSetup(getLocation(it.to_string()));
-		while (item_amount(it) < 1)
-			adventure(1,getLocation(it.to_string()));
-	}
-	// Figure out how many we need
-	int qty = 1;
-	if (it == $item[smooth velvet bra])
-		qty = 3;
-	if (it == $item[New Age healing crystal] || it == $item[gooey lava globs])
-		qty = 5;
-	if (it == $item[SMOOCH bracers])		// Special case
-	{
-		qty = 15 - (item_amount(it) * 5);
-		it = $item[Superheated metal];
-	}
-	int qtyNeeded = qty - item_amount(it);
-	// Get item
-	if (noAdventures contains it.to_string() && qtyNeeded > 0 && cost(it.to_string()) < maxExpenditure)
-	{
-		cli_execute("buy " + qty + " " + it);
-		if (it == $item[Superheated metal])
-			cli_execute("make " + qtyNeeded/5 + " SMOOCH bracers");
 	}
 }
 
@@ -260,6 +223,46 @@ string pickQuest()
 			best = q;
 	}
 	return best;
+}
+
+/*******************************************************
+*					getItem()
+*	Acquires the requisite quantity of an item needed
+*	for the Volcano quest.
+/*******************************************************/
+void getItem(item it)
+{
+	if (adventureQuests contains it.to_string() && !dontAdventure)
+	{
+		setNC(it);
+		changeSetup(getLocation(it.to_string()));
+		if (getLocation(it.to_string() == $location[LavaCo&trade; Lamp Factory])
+		{
+			if (get_property("choiceAdventure1091") == "0")	// Safety check to avoid failure
+				cli_execute("set choiceAdventure1091 = 7");
+		}
+		while (item_amount(it) < 1)
+			adventure(1,getLocation(it.to_string()));
+	}
+	// Figure out how many we need
+	int qty = 1;
+	if (it == $item[smooth velvet bra])
+		qty = 3;
+	if (it == $item[New Age healing crystal] || it == $item[gooey lava globs])
+		qty = 5;
+	if (it == $item[SMOOCH bracers])		// Special case
+	{
+		qty = 15 - (item_amount(it) * 5);
+		it = $item[Superheated metal];
+	}
+	int qtyNeeded = qty - item_amount(it);
+	// Get item
+	if (noAdventures contains it.to_string() && qtyNeeded > 0 && cost(it.to_string()) < maxExpenditure)
+	{
+		cli_execute("buy " + qty + " " + it);
+		if (it == $item[Superheated metal])
+			cli_execute("make " + qtyNeeded/5 + " SMOOCH bracers");
+	}
 }
 
 void main()
