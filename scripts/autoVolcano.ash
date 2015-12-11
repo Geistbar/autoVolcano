@@ -7,7 +7,8 @@ string[location] mood;		// Leave this alone
 /*******************************************************
 *			USER DEFINED VARIABLES START
 /*******************************************************/
-// Quest priority order. Rearrange to your preference
+// Quest priority order. Rearrange to your preference.
+// Leave "Saturday Night thermometer" last, as there is no functionality to retrieve it
 boolean[string] adventureQuests = $strings[fused fuse, glass ceiling fragments, Mr. Cheeng's 'stache, Lavalos core, Mr. Choch's bone, half-melted hula girl, Pener's crisps, signed deuce, the tongue of Smimmons, Raul's guitar pick, The One Mood Ring, Saturday Night thermometer];
 /*******************************************************
 *		Toggle Variables
@@ -16,13 +17,13 @@ boolean[string] adventureQuests = $strings[fused fuse, glass ceiling fragments, 
 *	meat above this level or turning in items worth
 *	above this level.
 *
-*	useZeroAdv: When set to TRUE, the script will not
+*	dontAdventure: When set to TRUE, the script will not
 *	adventure in order to acquire items if no mall-able
 *	quests are available. Change to FALSE to allow the 
 *	script to adventure.
 /*******************************************************/
-int maxExpenditure = 15000; // The most amount of meat you want spent
-boolean useZeroAdv = TRUE; // Change this if you're silly
+int maxExpenditure = 15000;
+boolean dontAdventure = TRUE;
 /*******************************************************
 *			Outfit, familiar, and autoattacks
 *	Enter the names of your outfits auto attacks,
@@ -157,6 +158,8 @@ void setNC(item quest)
 			break;
 		case $item[Mr. Cheeng's 'stache]:
 			cli_execute("set choiceAdventure1096 = 1");
+			if (get_property("choiceAdventure1091") == "0")	// Safety check
+				cli_execute("set choiceAdventure1091 = 7");
 			break;
 		case $item[Lavalos core]:
 			cli_execute("set choiceAdventure1097 = 2");
@@ -195,7 +198,7 @@ void setNC(item quest)
 /*******************************************************/
 void getItem(item it)
 {
-	if (adventureQuests contains it.to_string() && !useZeroAdv)
+	if (adventureQuests contains it.to_string() && !dontAdventure)
 	{
 		setNC(it);
 		changeSetup(getLocation(it.to_string()));
@@ -262,7 +265,7 @@ string pickQuest()
 void main()
 {
 	string quest = pickQuest();
-	if (adventureQuests contains quest && useZeroAdv)
+	if (adventureQuests contains quest && dontAdventure)
 	{
 		print("No zero-adventure quests available today.");
 		exit;
