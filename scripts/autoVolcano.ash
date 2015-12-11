@@ -236,7 +236,7 @@ void getItem(item it)
 	{
 		setNC(it);
 		changeSetup(getLocation(it.to_string()));
-		if (getLocation(it.to_string() == $location[LavaCo&trade; Lamp Factory]))
+		if (getLocation(it.to_string()) == $location[LavaCo&trade; Lamp Factory])
 		{
 			if (get_property("choiceAdventure1091") == "0")	// Safety check to avoid failure
 				cli_execute("set choiceAdventure1091 = 7");
