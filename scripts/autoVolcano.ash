@@ -1,9 +1,9 @@
 script "autoVolcano.ash"
 
-location[string] outfits;		// Leave this alone
-location[string] fam;			// Leave this alone
-location[string] autoattack;	// Leave this alone
-location[string] mood;		// Leave this alone
+string[location] outfits;		// Leave this alone
+string[location] fam;			// Leave this alone
+string[location] autoattack;	// Leave this alone
+string[location] mood;		// Leave this alone
 /*******************************************************
 *			USER DEFINED VARIABLES START
 /*******************************************************/
