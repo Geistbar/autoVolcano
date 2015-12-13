@@ -1,4 +1,5 @@
 script "autoVolcano.ash"
+notify Giestbar;
 
 string[location] outfits;		// Leave this alone
 string[location] fam;			// Leave this alone
