@@ -7,8 +7,11 @@ string[location] mood;			// Leave this alone
 /*******************************************************
 *			USER DEFINED VARIABLES START
 /*******************************************************/
-// Quest priority order. Rearrange to your preference.
-// Leave "Saturday Night thermometer" last, as there is no functionality to retrieve it
+/*******************************************************
+*	Quest priority order. Rearrange to your preference.
+*	Leave "Saturday Night thermometer" last, as there is
+*	no functionality to retrieve it nor will any be added.
+/*******************************************************/
 boolean[string] adventureQuests = $strings[fused fuse, glass ceiling fragments, Mr. Cheeng's 'stache, Lavalos core, Mr. Choch's bone, half-melted hula girl, Pener's crisps, signed deuce, the tongue of Smimmons, Raul's guitar pick, The One Mood Ring, Saturday Night thermometer];
 /*******************************************************
 *		Toggle Variables
@@ -17,13 +20,18 @@ boolean[string] adventureQuests = $strings[fused fuse, glass ceiling fragments, 
 *	meat above this level or turning in items worth
 *	above this level.
 *
-*	dontAdventure: When set to TRUE, the script will not
+*	- dontAdventure: When set to TRUE, the script will not
 *	adventure in order to acquire items if no mall-able
 *	quests are available. Change to FALSE to allow the 
 *	script to adventure.
+*
+*	- getDiscoCoin: When set to TRUE the script will 
+*	attempt to equip six smooth velvet items and get
+*	a volcoino from the disco tower.
 /*******************************************************/
 int maxExpenditure = 15000;
 boolean dontAdventure = TRUE;
+boolean getDiscoCoin = FALSE;
 /*******************************************************
 *			Outfit, familiar, and autoattacks
 *	Enter the names of your outfits auto attacks,
@@ -69,6 +77,60 @@ boolean[string] noAdventures = $strings[New Age healing crystal, superduperheate
 
 string bunker = "place.php?whichplace=airport_hot&action=airport4_questhub";
 string first; string second; string third; // Order of quests at bunker
+item[slot] equipment;	// For tower coin
+
+/*******************************************************
+*					saveSetup()
+*	Saves your equipment to restore later.
+/*******************************************************/
+void saveSetup()
+{
+	foreach s in $slots[]
+		equipment[s] = equipped_item(s);
+}
+
+/*******************************************************
+*					restoreState()
+*	Restores your equipment to what it was earlier.
+/*******************************************************/
+void restoreState()
+{
+	foreach s in $slots[]
+	{
+		if (equipped_item(s) != equipment[s])
+			equip(s,equipment[s]);
+	}
+}
+
+/*******************************************************
+*					restoreState()
+*	Equips smooth velvet items then grabs a Volcoino.
+/*******************************************************/
+void getTowerCoin()
+{
+	saveSetup();
+	foreach it in $items[smooth velvet pocket square, smooth velvet socks, smooth velvet hat, smooth velvet shirt, smooth velvet hanky, smooth velvet pants]
+	{
+		if (item_amount(it) == 0)
+		{
+			print("You're missing a required item to get a volcoino from the tower.","red");
+			restoreState();
+			return;
+		}
+		// Need them all in different slots
+		if (it == $item[smooth velvet hanky])
+			equip($slot[acc1],it);
+		else if (it == $item[smooth velvet socks])
+			equip($slot[acc2],it);
+		else if (it == $item[smooth velvet pocket square])
+			equip($slot[acc3],it);
+		else
+			equip(it);
+	}
+	visit_url("place.php?whichplace=airport_hot&action=airport4_zone1");
+	run_choice(7);
+	restoreState();
+}
 
 /*******************************************************
 *					changeSetup()
@@ -267,15 +329,17 @@ void getItem(item it)
 
 void main()
 {
+	if (getDiscoCoin)
+		getTowerCoin();
 	string quest = pickQuest();
 	if (adventureQuests contains quest && dontAdventure)
 	{
-		print("No zero-adventure quests available today.");
+		print("No zero-adventure quests available today.","red");
 		exit;
 	}
 	else if (cost(quest) > maxExpenditure)
 	{
-		print("The cost of today's quest exceeds your max expenditure setting.");
+		print("The cost of today's quest exceeds your max expenditure setting.","red");
 		exit;
 	}
 	getItem(quest.to_item());
